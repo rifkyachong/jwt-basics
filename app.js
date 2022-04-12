@@ -1,22 +1,26 @@
 // pre-process (all imports)
-const express = require("express");
-const connectDB = require("./database/connect");
 require("dotenv").config();
 require("express-async-error");
-// const errorHandler = require("./middleware/error-handler");
+const express = require("express");
+const connectDB = require("./database/connect");
+const main = require("./router/main");
+const errorHandler = require("./middleware/error-handler");
+const notFound = require("./middleware/not-found");
 
 // server metadata
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8081;
 
 // middleware
 app.use(express.static("public"));
 app.use(express.json());
 
-// router
+// routes
+app.use("/api/v1", main);
 
-// catch-all
-// appServer.use(errorHandler);
+// error handler & not found
+app.use(notFound);
+app.use(errorHandler);
 
 // start the server
 const start = async () => {
